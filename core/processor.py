@@ -11,6 +11,10 @@ class Processor:
         self.bibliographylayout = bibliographylayout
         self.langsuffix = "-"+id.split("-")[1] if len(id.split("-"))>1 else ""
         
+        # Remove -en for default
+        if "-en" in self.langsuffix:
+            self.langsuffix=""
+        
     def process(self):
         self.setbibliography()
         self.setcitation()
@@ -81,8 +85,8 @@ class Processor:
         originaldate = group.xpath("z:date[@variable='original-date']", namespaces=self.tools.ns)[0]
         originaldate.attrib["prefix"] = config.get("c-original-date-left", "")
         originaldate.attrib["suffix"] = config.get("c-original-date-right", "=")
-        originaldate.attrib["form"] = ""
-        originaldate.attrib["date-parts"] = ""
+        originaldate.attrib.pop("form")
+        originaldate.attrib.pop("date-parts")
         self.tools.appendchild(originaldate, "date-part", None, {"name": "year"})
         
         
@@ -228,8 +232,8 @@ class Processor:
         originaldate = group.xpath("z:date[@variable='original-date']", namespaces=self.tools.ns)[0]
         originaldate.attrib["prefix"] = config.get("c-original-date-left", "")
         originaldate.attrib["suffix"] = config.get("c-original-date-right", "=")
-        originaldate.attrib["form"] = ""
-        originaldate.attrib["date-parts"] = ""
+        originaldate.attrib.pop("form")
+        originaldate.attrib.pop("date-parts")
         self.tools.appendchild(originaldate, "date-part", None, {"name": "year"})
         
         # No date
@@ -349,11 +353,11 @@ class Processor:
         if config.get("b-locator-label-invert", False):
             if config.get("b-locator-label-form", "")!="":
                 self.tools.appendchild(issue, "label", None, {"variable": "issue", "form": "short"})
-                self.tools.appendchild(issued, "label", None, {"variable": "issued", "form": "short"})
+                # self.tools.appendchild(issued, "label", None, {"variable": "issued", "form": "short"})
         else:
             if config.get("b-locator-label-form", "")!="":
                 self.tools.insertchild(0, issue, "label", None, {"variable": "issue", "form": "short"})
-                self.tools.insertchild(0, issued, "label", None, {"variable": "issued", "form": "short"})
+                # self.tools.insertchild(0, issued, "label", None, {"variable": "issued", "form": "short"})
         
         
         # Only issue present
@@ -364,7 +368,7 @@ class Processor:
         
         # Only issued present
         issued = locators.xpath("z:choose/z:if/z:choose/z:else", namespaces=self.tools.ns)[0]
-        self.tools.appendchild(issued, "label", None, {"variable": "issued", "form": "short"})
+        # self.tools.appendchild(issued, "label", None, {"variable": "issued", "form": "short"})
         
         """
         Locators chapter
@@ -398,9 +402,11 @@ class Processor:
         page.attrib["prefix"] = config.get("b-locator-article-prefix", "、") #need checking
         
         if config.get("b-article-page-label-invert", False):
-            self.tools.appendchild(page.getparent(), "label", None, {"form": config.get("b-locator-label-form", "long"), "variable": "page"})
+            if config.get("b-locator-label-form", "")!="":
+                self.tools.appendchild(page.getparent(), "label", None, {"form": config.get("b-locator-label-form", "long"), "variable": "page"})
         else:
-            self.tools.insertchild(0, page.getparent(), "label", None, {"form": config.get("b-locator-label-form", "long"), "variable": "page"})
+            if config.get("b-locator-label-form", "")!="":
+                self.tools.insertchild(0, page.getparent(), "label", None, {"form": config.get("b-locator-label-form", "long"), "variable": "page"})
             
         """
         Access

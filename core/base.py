@@ -6,19 +6,20 @@ from .tools import Tools
 from .processor import Processor
 
 class Base:
-    def __init__(self, id):
+    def __init__(self, ids, name, language, multilingual):
+        self.id = ids[0]
         self.input = "input/chicago-author-date.csl"
-        self.output = "output/chicago-author-date-"+id+".csl"
-        self.id = id
-        self.tools = Tools(id)
+        self.output = "output/chicago-author-date-"+self.id+".csl"
+        
+        self.tools = Tools(self.id)
         
         #basic settings
         self.sortkey = "name-kana"
         self.ns = self.tools.ns
         
         #basic info
-        self.journalname = "Africa Educational Research Journal"
-        self.language = "Japanese"
+        self.journalname = name
+        self.language = language
         
         #xml bases
         parser = ET.XMLParser(remove_blank_text=True)
@@ -39,41 +40,42 @@ class Base:
         Bibliography settings
         """
         # Add sorting key: kana-name
-        sort = self.bibliography.xpath("z:sort", namespaces=self.ns)[0]
-        key = SubElement(sort, "key")
-        key.attrib["variable"] = self.sortkey
-        sort.insert(0, key)
+        if multilingual:
+            sort = self.bibliography.xpath("z:sort", namespaces=self.ns)[0]
+            key = SubElement(sort, "key")
+            key.attrib["variable"] = self.sortkey
+            sort.insert(0, key)
         
+        """
+        Split in two languages
+        """
         # Add ja bibliography layouts
         self.bibliographylayout = self.tree.findall('z:bibliography/z:layout', self.ns)[0]
-        self.bibliographylayoutja = copy.deepcopy(self.bibliographylayout)
-        self.bibliographylayoutja.attrib["locale"] = "ja"
-        idx = self.bibliography.getchildren().index(self.bibliographylayout)
-        self.bibliography.insert(idx, self.bibliographylayoutja)
-        for child in self.bibliographylayoutja.getchildren():
-            self.tools.localize(child)
+        if multilingual:
+            self.bibliographylayoutja = copy.deepcopy(self.bibliographylayout)
+            self.bibliographylayoutja.attrib["locale"] = "ja"
+            idx = self.bibliography.getchildren().index(self.bibliographylayout)
+            self.bibliography.insert(idx, self.bibliographylayoutja)
+            for child in self.bibliographylayoutja.getchildren():
+                self.tools.localize(child)
         
         """
         Citation settings
         """
         self.citationlayout = self.tree.findall('z:citation/z:layout', self.ns)[0]
-        self.citationlayoutja = copy.deepcopy(self.citationlayout)
-        self.citationlayoutja.attrib["locale"] = "ja"
-        idx = self.citation.getchildren().index(self.citationlayout)
-        self.citation.insert(idx, self.citationlayoutja)
-        for child in self.citationlayoutja.getchildren():
-            self.tools.localize(child)
+        if multilingual:
+            self.citationlayoutja = copy.deepcopy(self.citationlayout)
+            self.citationlayoutja.attrib["locale"] = "ja"
+            idx = self.citation.getchildren().index(self.citationlayout)
+            self.citation.insert(idx, self.citationlayoutja)
+            for child in self.citationlayoutja.getchildren():
+                self.tools.localize(child)
             
         # Citation main settings
         self.citation.attrib["et-al-min"] = "3"
         self.citation.attrib["disambiguate-add-year-suffix"] = "false"
         self.citation.attrib["disambiguate-add-names"] = "false"
         self.citation.attrib["disambiguate-add-givenname"] = "false"
-        
-        # self.citationlayout.attrib["prefix"] = "（"
-        # self.citationlayout.attrib["suffix"] = "）"
-        # self.citationlayoutja.attrib["prefix"] = "（"
-        # self.citationlayoutja.attrib["suffix"] = "）"   
         
         """
         Edit metadata
@@ -83,26 +85,28 @@ class Base:
         """ 
         Create locales
         """
-        localeja = SubElement(self.info.getparent(), "locale")
-        terms = SubElement(localeja, "terms")
-        localeja.attrib[self.tools.qname("lang")] = "ja"
-        idx = self.info.getparent().getchildren().index(self.info)+1
-        self.info.getparent().insert(idx, localeja)
-        localeja.insert(0, terms)
+        if multilingual:
+            localeja = SubElement(self.info.getparent(), "locale")
+            terms = SubElement(localeja, "terms")
+            localeja.attrib[self.tools.qname("lang")] = "ja"
+            idx = self.info.getparent().getchildren().index(self.info)+1
+            self.info.getparent().insert(idx, localeja)
+            localeja.insert(0, terms)
+            
+            #Insert locale terms
+            self.tools.appendchild(terms, "term", "頁", {"name": "page", "form": "long"})
+            self.tools.appendchild(terms, "term", "巻", {"name": "volume", "form": "short"})
+            self.tools.appendchild(terms, "term", "号", {"name": "issue", "form": "short"})
+            self.tools.appendchild(terms, "term", "訳", {"name": "translator", "form": "short"})
+            self.tools.appendchild(terms, "term", "編訳", {"name": "editortranslator", "form": "short"})
+            self.tools.appendchild(terms, "term", "アクセス", {"name": "accessed"})
         
-        #Insert locale terms
-        self.tools.appendchild(terms, "term", "頁", {"name": "page", "form": "long"})
-        self.tools.appendchild(terms, "term", "巻", {"name": "volume", "form": "short"})
-        self.tools.appendchild(terms, "term", "号", {"name": "issue", "form": "short"})
-        self.tools.appendchild(terms, "term", "訳", {"name": "translator", "form": "short"})
-        self.tools.appendchild(terms, "term", "編訳", {"name": "editortranslator", "form": "short"})
-        self.tools.appendchild(terms, "term", "アクセス", {"name": "accessed"})
-        
-        #Process Japanese
-        Processor(id+"-ja", self.jamacros, self.citationlayoutja, self.bibliographylayoutja).process()
-        
+        if multilingual:
+            #Process Japanese
+            Processor(ids[1], self.jamacros, self.citationlayoutja, self.bibliographylayoutja).process()
+            
         #Process English
-        Processor(id, self.macros, self.citationlayout, self.bibliographylayout).process()
+        Processor(self.id, self.macros, self.citationlayout, self.bibliographylayout).process()
     
     def getmacros(self):
         m = self.tree.findall('z:macro', self.ns)
