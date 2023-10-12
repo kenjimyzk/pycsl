@@ -3,7 +3,7 @@
 These are Japanese & English Citation Style Language (CSL) files. CSL files are used by citation management softwares such as Zotero and Mendeley to render citations and bibliography according to journals and publishers' guidelines.
 
 ## Download
-Head to [Styles created so far](#Styles-created-so-far). Right click on the style you want, then save to your computer.
+Head to [Styles created so far](#styles-created-so-far). Right click on the style you want, then save to your computer.
 
 ## Installation
 For Zotero
@@ -15,7 +15,7 @@ For Zotero
 For more information on installation on Zotero head to [the official website](https://www.zotero.org/support/styles). 
 
 ## Reinstall
-Repeat the steps from [Installation](#install) above.
+Repeat the steps from [Installation](#installation) above.
 
 ## Use
 * Add "ja" to the language field of all Japanese entries.
@@ -25,4 +25,4 @@ Repeat the steps from [Installation](#install) above.
 If you do not follow these steps, Japanese will not render properly.
 
 # Styles created so far
-* [Africa Educational Research Journal (Japanese)]()
+* [Africa Educational Research Journal (Japanese)](https://github.com/frianasoa/pycsl/releases/latest/download/chicago-author-date-aerj.csl)
