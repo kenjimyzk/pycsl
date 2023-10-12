@@ -2,10 +2,10 @@
 ## Introductio{#intro}
 These are Japanese & English Citation Style Language (CSL) files. CSL files are used by citation management softwares such as Zotero and Mendeley to render citations and bibliography according to journals and publishers' guidelines.
 
-## Download{#download}
+## Download{# download}
 Head to [Styles created so far](#allstyles). Right click on the style you want, then save to your computer.
 
-## (Installation){#install}
+## (Installation){# install}
 For Zotero
 1. Open Zotero
 2. Double click on the file you just downloaded & confirm
@@ -14,15 +14,15 @@ For Zotero
 
 For more information on installation on Zotero head to [the official website](https://www.zotero.org/support/styles). 
 
-## Reinstall {#reinstall}
+## Reinstall {# reinstall}
 Repeat the steps from [Installation](#install) above.
 
-## Use {#use}
+## Use {# use}
 * Add "ja" to the language field of all Japanese entries.
 * Add the kana reading of the author's name in the note field (extra field for Zotero) for sorting following aiueo order.
   - name-kana: ふりがな
   
 If you do not follow these steps, Japanese will not render properly.
 
-# Styles created so far {#allstyles}
+# Styles created so far {# allstyles}
 * [Africa Educational Research Journal (Japanese)]()
