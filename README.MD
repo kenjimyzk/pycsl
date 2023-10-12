@@ -24,5 +24,5 @@ Repeat the steps from [Installation](#install) above.
   
 If you do not follow these steps, Japanese will not render properly.
 
-# Styles created so far {# allstyles}
+# <a name="allstyles">Styles created so far</a>
 * [Africa Educational Research Journal (Japanese)]()
