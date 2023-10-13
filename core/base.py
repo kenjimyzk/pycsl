@@ -1,4 +1,4 @@
-import os, copy, datetime, pytz
+import os, copy, datetime, pytz, shutil
 from lxml import etree as ET
 from lxml.etree import SubElement, QName
 from .tools import Tools
@@ -7,7 +7,11 @@ from .processor import Processor
 
 class Base:
     def __init__(self, ids, name, language, multilingual):
-        self.id = ids[0]
+        if multilingual:
+            self.id = ids[1]
+        else:
+            self.id = ids[0]
+            
         self.input = "input/chicago-author-date.csl"
         self.output = "output/chicago-author-date-"+self.id+".csl"
         
@@ -106,7 +110,7 @@ class Base:
             Processor(ids[1], self.jamacros, self.citationlayoutja, self.bibliographylayoutja).process()
             
         #Process English
-        Processor(self.id, self.macros, self.citationlayout, self.bibliographylayout).process()
+        Processor(ids[0], self.macros, self.citationlayout, self.bibliographylayout).process()
     
     def getmacros(self):
         m = self.tree.findall('z:macro', self.ns)
@@ -162,7 +166,12 @@ class Base:
         """
         up = self.tools.child(self.info, "z:updated")
         up.text = datetime.datetime.now().astimezone().replace(microsecond=0).isoformat()
-      
+    
+    def install(self):
+        output = os.path.dirname(os.path.abspath(__file__))+"/../"+self.output
+        os.system(output)
+    
     def create(self):
         os.makedirs("output", exist_ok=True)
         self.tree.write(self.output, pretty_print=True, xml_declaration=True, encoding="UTF-8")
+        self.install()

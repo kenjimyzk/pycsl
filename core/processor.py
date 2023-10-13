@@ -128,6 +128,8 @@ class Processor:
         name.attrib["sort-separator"] = config.get("b-name-sort-separator", ",")
         name.attrib["delimiter-precedes-last"] = config.get("b-delimiter-precedes-last", "never")
         name.attrib["initialize-with"] = config.get("b-name-initialize-with", "")
+        if config.get("b-contributor-name-as-sort-order", "")!="":
+            name.attrib["name-as-sort-order"] = config.get("b-contributor-name-as-sort-order", "first")
         
         # Label
         label = contributors.xpath("z:group/z:names/z:label", namespaces=self.tools.ns)[0]
@@ -153,6 +155,8 @@ class Processor:
             name.attrib["delimiter"] = config.get("b-name-delimiter", "・")
             name.attrib["sort-separator"] = config.get("b-name-sort-separator", ",")
             name.attrib["delimiter-precedes-last"] = config.get("b-delimiter-precedes-last", "never")
+            if config.get("b-container-contributor-name-as-sort-order", "")!="":
+                name.attrib["name-as-sort-order"] = config.get("b-container-contributor-name-as-sort-order", "first")
         
         # Remove prefix from container-title to container-contributor suffix
         title = self.bibliographylayout.xpath("z:text[@macro='container-title"+self.langsuffix+"']", namespaces=self.tools.ns)[0]
@@ -180,6 +184,9 @@ class Processor:
             name.attrib["sort-separator"] = config.get("b-name-sort-separator", ",")
             name.attrib["delimiter-precedes-last"] = config.get("b-delimiter-precedes-last", "never")
             name.attrib["initialize-with"] = config.get("b-name-initialize-with", "")
+            
+            if config.get("b-container-contributor-name-as-sort-order", "")!="":
+                name.attrib["name-as-sort-order"] = config.get("b-container-contributor-name-as-sort-order", "first")
         
         for label in labels:
             label.attrib["prefix"] = config.get("b-contributor-label-left", " (")
@@ -202,6 +209,8 @@ class Processor:
             name.attrib["sort-separator"] = config.get("b-name-sort-separator", ",")
             name.attrib["delimiter-precedes-last"] = config.get("b-delimiter-precedes-last", "never")
             name.attrib["initialize-with"] = config.get("b-name-initialize-with", "")
+            if config.get("b-secondary-contributor-name-as-sort-order", "")!="":
+                name.attrib["name-as-sort-order"] = config.get("b-secondary-contributor-name-as-sort-order", "first")
             name.getparent().insert(0, name)
         
         for label in labels:
