@@ -1,5 +1,5 @@
 # Japanese & English styles
-## Introductio{#intro}
+## Introduction
 These are Japanese & English Citation Style Language (CSL) files. CSL files are used by citation management softwares such as Zotero and Mendeley to render citations and bibliography according to journals and publishers' guidelines.
 
 ## Download
