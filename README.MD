@@ -29,6 +29,9 @@ If you write in Japanese or Japanese with English (or other languages) reference
   
 If you do not follow these steps, Japanese will not render properly.
 
+## Limitations
+Due to language limitations, names in Katakana are displayed like Japanese names (セイメイ), without punctuation.
+
 
 # List of styles
 * [Africa Educational Research Journal (Japanese)](https://github.com/frianasoa/pycsl/releases/latest/download/chicago-author-date-aerj-ja.csl)
