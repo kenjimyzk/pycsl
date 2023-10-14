@@ -6,7 +6,7 @@ from .tools import Tools
 from .processor import Processor
 
 class Base:
-    def __init__(self, ids, name, language, multilingual):
+    def __init__(self, ids, name, language, multilingual, config):
         if multilingual:
             self.id = ids[1]
         else:
@@ -35,6 +35,7 @@ class Base:
         self.bibliography.attrib.pop("subsequent-author-substitute")
         
         self.root.attrib["page-range-format"] = "expanded"
+        self.root.attrib["default-locale"] = config.get("locale", "en-UK")
         
         # retrieve macro list
         self.macros = self.getmacros()
@@ -89,9 +90,10 @@ class Base:
         """ 
         Create locales
         """
+        
         if multilingual:
-            localeja = SubElement(self.info.getparent(), "locale")
-            terms = SubElement(localeja, "terms")
+            localeja = SubElement(self.info.getparent(), "{"+self.ns["z"]+"}locale")
+            terms = SubElement(localeja, "{"+self.ns["z"]+"}terms")
             localeja.attrib[self.tools.qname("lang")] = "ja"
             idx = self.info.getparent().getchildren().index(self.info)+1
             self.info.getparent().insert(idx, localeja)
@@ -104,13 +106,14 @@ class Base:
             self.tools.appendchild(terms, "term", "訳", {"name": "translator", "form": "short"})
             self.tools.appendchild(terms, "term", "編訳", {"name": "editortranslator", "form": "short"})
             self.tools.appendchild(terms, "term", "アクセス", {"name": "accessed"})
+            
         
         if multilingual:
             #Process Japanese
-            Processor(ids[1], self.jamacros, self.citationlayoutja, self.bibliographylayoutja).process()
+            Processor(self.root, ids[1], config, self.jamacros, self.citationlayoutja, self.bibliographylayoutja).process()
             
         #Process English
-        Processor(ids[0], self.macros, self.citationlayout, self.bibliographylayout).process()
+        Processor(self.root, ids[0], config, self.macros, self.citationlayout, self.bibliographylayout).process()
     
     def getmacros(self):
         m = self.tree.findall('z:macro', self.ns)

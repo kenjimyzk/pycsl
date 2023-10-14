@@ -11,7 +11,7 @@ class Pycsl:
             multilingual = len(ids)>1
             name = config["name"]
             language = config["language"]
-            self.base = Base(ids, name, language, multilingual)    
+            self.base = Base(ids, name, language, multilingual, config)    
             self.base.create()
 
 if __name__=="__main__":
