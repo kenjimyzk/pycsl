@@ -18,6 +18,11 @@ For more information on installation on Zotero head to [the official website](ht
 Repeat the steps from [Installation](#installation) above.
 
 ## Use
+
+If you write in English only, choose the English style and use normally.
+
+If you write in Japanese or Japanese with English (or other languages) references, follow the instructions below.
+
 * Add "ja" to the language field of all Japanese entries.
 * Add the kana reading of the author's name in the note field (extra field for Zotero) for sorting following aiueo order.
   - name-kana: ふりがな
