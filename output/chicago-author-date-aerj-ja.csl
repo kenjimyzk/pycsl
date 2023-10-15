@@ -37,7 +37,7 @@
     <category citation-format="author-date"/>
     <category field="generic-base"/>
     <summary>The author-date variant of the Chicago style - Edited for Africa Educational Research Journal (Japanese)</summary>
-    <updated>2023-10-15T12:27:04+09:00</updated>
+    <updated>2023-10-15T13:19:28+09:00</updated>
     <rights license="http://creativecommons.org/licenses/by-sa/3.0/">This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License</rights>
   </info>
   <locale xml:lang="ja">
@@ -482,13 +482,13 @@
       <if type="bill book graphic legal_case legislation motion_picture report song" match="any">
         <choose>
           <if is-numeric="edition">
-            <group delimiter=" " prefix=". ">
+            <group delimiter=" ">
               <number variable="edition" form="ordinal"/>
               <text term="edition" form="short" strip-periods="true"/>
             </group>
           </if>
           <else>
-            <text variable="edition" text-case="capitalize-first" prefix=". "/>
+            <text variable="edition" text-case="capitalize-first"/>
           </else>
         </choose>
       </if>
@@ -512,13 +512,13 @@
       <if type="bill book graphic legal_case legislation motion_picture report song" match="any">
         <choose>
           <if is-numeric="edition">
-            <group delimiter=" " prefix=". ">
+            <group delimiter=" ">
               <number variable="edition" form="ordinal"/>
               <text term="edition" form="short" strip-periods="true"/>
             </group>
           </if>
           <else>
-            <text variable="edition" text-case="capitalize-first" prefix=". "/>
+            <text variable="edition" text-case="capitalize-first"/>
           </else>
         </choose>
       </if>
@@ -1311,7 +1311,7 @@
         <text macro="title-ja"/>
       </group>
       <text macro="description-ja"/>
-      <text macro="secondary-contributors-ja"/>
+      <text macro="secondary-contributors-ja" suffix=", "/>
       <text macro="container-contributors-ja" suffix=""/>
       <text macro="container-title-ja" prefix=""/>
       <text macro="edition-ja" suffix=""/>
@@ -1331,7 +1331,7 @@
         <text macro="title"/>
       </group>
       <text macro="description"/>
-      <text macro="secondary-contributors"/>
+      <text macro="secondary-contributors" suffix=", "/>
       <text macro="container-contributors" suffix=", "/>
       <text macro="container-title" prefix=""/>
       <text macro="edition" suffix=". "/>

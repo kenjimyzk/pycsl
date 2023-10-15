@@ -161,3 +161,6 @@ cython_debug/
 
 # my tools
 upload.sh
+
+# MS office temp files
+~$*

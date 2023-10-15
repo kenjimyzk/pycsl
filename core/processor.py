@@ -220,6 +220,9 @@ class Processor:
         """
         Secondary contributors
         """
+        secondarycontributors = self.bibliographylayout.xpath("z:text[@macro='secondary-contributors"+self.langsuffix+"']", namespaces=self.tools.ns)[0]
+        secondarycontributors.attrib["suffix"] = ", "
+        
         # Remove prefix
         authors = self.bibliographylayout.xpath("z:text[@macro='secondary-contributors"+self.langsuffix+"']", namespaces=self.tools.ns)[0]
         if "prefix" in authors.attrib:
@@ -360,6 +363,13 @@ class Processor:
         """
         edition = self.bibliographylayout.xpath("z:text[@macro='edition"+self.langsuffix+"']", namespaces=self.tools.ns)[0]
         edition.attrib["suffix"] = config.get("b-edition-right", "")
+        
+        # Remove prefix
+        editionnumeric = self.macros.get("edition", None).xpath("z:choose/z:if/z:choose/z:if/z:group", namespaces=self.tools.ns)[0]
+        editiontext = self.macros.get("edition", None).xpath("z:choose/z:if/z:choose/z:else/z:text", namespaces=self.tools.ns)[0]
+        editionnumeric.attrib.pop("prefix")
+        editiontext.attrib.pop("prefix")
+        
         
         """
         issue
