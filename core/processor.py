@@ -440,16 +440,19 @@ class Processor:
 
         ilabel = locators.xpath("z:choose/z:if/z:choose/z:else-if/z:group/z:text[@term='issue']", namespaces=self.tools.ns)[0]
         group = locators.xpath("z:choose/z:if/z:choose/z:else-if/z:group", namespaces=self.tools.ns)[0]
-        ilabel.getparent().insert(len(ilabel.getparent().getchildren()), ilabel)
-        group.attrib.pop("prefix")
         
         if config.get("b-locator-label-invert", False):
+            ilabel.getparent().insert(len(ilabel.getparent().getchildren()), ilabel)
             issue.attrib["prefix"] = config.get("b-issue-left", "")
             ilabel.attrib["suffix"] = config.get("b-issue-right", "")
         else:
+            ilabel.getparent().insert(0, ilabel)
+            ilabel.attrib["text-case"] = "capitalize-first"
             ilabel.attrib["prefix"] = config.get("b-issue-left", "")
             issue.attrib["suffix"] = config.get("b-issue-right", "")
         
+        group.attrib.pop("prefix")
+
         # Only issued present
         issued = locators.xpath("z:choose/z:if/z:choose/z:else", namespaces=self.tools.ns)[0]
         # self.tools.appendchild(issued, "label", None, {"variable": "issued", "form": "short"})

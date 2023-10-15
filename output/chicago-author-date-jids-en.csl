@@ -37,7 +37,7 @@
     <category citation-format="author-date"/>
     <category field="generic-base"/>
     <summary>The author-date variant of the Chicago style - Edited for Journal of International Development Studies (English)</summary>
-    <updated>2023-10-15T01:55:44+09:00</updated>
+    <updated>2023-10-15T12:27:07+09:00</updated>
     <rights license="http://creativecommons.org/licenses/by-sa/3.0/">This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License</rights>
   </info>
   <locale xml:lang="en">
@@ -85,7 +85,7 @@
           </names>
           <names variable="director" delimiter=". ">
             <name and="symbol" delimiter=", " sort-separator=", " delimiter-precedes-last="never" initialize-with="." initialize="false" name-as-sort-order="all"/>
-            <label form="short" text-case="capitalize-first" suffix=")" prefix=", "/>
+            <label form="short" text-case="capitalize-first" suffix=")" prefix=""/>
           </names>
         </group>
       </if>
@@ -552,11 +552,11 @@
           </if>
           <else-if variable="issue">
             <group delimiter=" ">
+              <text term="issue" form="short" text-case="capitalize-first" prefix=""/>
               <text variable="issue" suffix=""/>
               <date variable="issued" prefix="(" suffix=")">
                 <date-part name="month"/>
               </date>
-              <text term="issue" form="short" prefix=", "/>
             </group>
           </else-if>
           <else>
