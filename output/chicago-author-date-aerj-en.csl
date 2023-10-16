@@ -37,7 +37,7 @@
     <category citation-format="author-date"/>
     <category field="generic-base"/>
     <summary>The author-date variant of the Chicago style - Edited for Africa Educational Research Journal (English)</summary>
-    <updated>2023-10-15T13:19:29+09:00</updated>
+    <updated>2023-10-16T20:10:10+09:00</updated>
     <rights license="http://creativecommons.org/licenses/by-sa/3.0/">This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License</rights>
   </info>
   <locale xml:lang="en">
@@ -531,11 +531,12 @@
       <if type="article-journal">
         <choose>
           <if variable="volume">
+            <text variable="volume" prefix=" "/>
             <group delimiter="">
               <group delimiter="">
                 <choose>
                   <if variable="issue">
-                    <text variable="issue"/>
+                    <text variable="issue" prefix="(" suffix=")"/>
                   </if>
                   <else>
                     <date variable="issued">
@@ -545,10 +546,9 @@
                 </choose>
               </group>
             </group>
-            <text variable="volume" prefix=" "/>
           </if>
           <else-if variable="issue">
-            <group delimiter=" ">
+            <group delimiter="">
               <text term="issue" form="short" text-case="capitalize-first" prefix="("/>
               <text variable="issue" suffix=")"/>
               <date variable="issued" prefix="(" suffix=")">
@@ -741,12 +741,6 @@
     <choose>
       <if variable="locator">
         <choose>
-          <if locator="page" match="any">
-            <label variable="locator" form="short"/>
-          </if>
-        </choose>
-        <text variable="locator"/>
-        <choose>
           <if locator="page" match="none">
             <choose>
               <if type="bill book graphic legal_case legislation motion_picture report song" match="any">
@@ -755,23 +749,28 @@
                     <group>
                       <text term="volume" form="short" suffix=" "/>
                       <number variable="volume" form="numeric"/>
-                      <label variable="locator" form="short" prefix=", " suffix=" "/>
+                      <label variable="locator" form="short" prefix=", " suffix=""/>
                     </group>
                   </if>
                   <else>
-                    <label variable="locator" form="short" suffix=" "/>
+                    <label variable="locator" form="short" suffix=""/>
                   </else>
                 </choose>
               </if>
               <else>
-                <label variable="locator" form="short" suffix=" "/>
+                <label variable="locator" form="short" suffix=""/>
               </else>
             </choose>
           </if>
           <else-if type="bill book graphic legal_case legislation motion_picture report song" match="any">
             <number variable="volume" form="numeric" suffix=":"/>
+            <label variable="locator" form="short" suffix=""/>
           </else-if>
+          <else>
+            <label variable="locator" form="short" suffix=""/>
+          </else>
         </choose>
+        <text variable="locator"/>
       </if>
     </choose>
   </macro>
@@ -1218,7 +1217,7 @@
       </else>
     </choose>
   </macro>
-  <citation et-al-min="3" et-al-use-first="1" disambiguate-add-year-suffix="false" disambiguate-add-names="false" disambiguate-add-givenname="false" givenname-disambiguation-rule="primary-name" collapse="year" after-collapse-delimiter="; ">
+  <citation et-al-min="3" et-al-use-first="1" disambiguate-add-year-suffix="false" disambiguate-add-names="false" disambiguate-add-givenname="false" givenname-disambiguation-rule="primary-name" collapse="year" after-collapse-delimiter="; " delimiter-precedes-last="never">
     <layout prefix="(" suffix=")" delimiter="; ">
       <group delimiter=", ">
         <choose>
@@ -1253,7 +1252,7 @@
         <text macro="title"/>
       </group>
       <text macro="description"/>
-      <text macro="secondary-contributors" suffix=", "/>
+      <text macro="secondary-contributors" suffix=""/>
       <text macro="container-contributors" suffix=", "/>
       <text macro="container-title" prefix=""/>
       <text macro="edition" suffix=". "/>

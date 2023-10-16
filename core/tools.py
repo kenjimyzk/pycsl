@@ -8,8 +8,12 @@ class Tools:
         df = pd.read_excel(os.path.dirname(os.path.abspath(__file__))+"/../input/config.xlsx")[["variable", id]].fillna("")
         self.config = dict(zip(df["variable"],df[id]))
     
+    def splitname(self, name, delimiter="", ):
+        self.appendchild(name, "name-part", None, {"suffix": delimiter, "name": "family"})
+        self.appendchild(name, "name-part", None, {"name": "given"})
+    
     def appendchild(self, parent, tag, text=None, attribs={}):
-        child = SubElement(parent, tag)
+        child = SubElement(parent, "{"+self.ns["z"]+"}"+tag)
         if text is not None:
             child.text = text
         for a in attribs:
@@ -18,7 +22,7 @@ class Tools:
         return child
         
     def insertchild(self, index, parent, tag, text=None, attribs={}):
-        child = SubElement(parent, tag)
+        child = SubElement(parent, "{"+self.ns["z"]+"}"+tag)
         if text is not None:
             child.text = text
         for a in attribs:

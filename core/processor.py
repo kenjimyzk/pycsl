@@ -57,35 +57,54 @@ class Processor:
         name.attrib["delimiter"] = config.get("c-name-delimiter", "")
         name.attrib["and"] = config.get("c-and-form", "")
         
-        
-        
         """
         Set page number
         """
-        #Page
         locator = self.macros.get("point-locators", None)
         
-        # Move text in front of label for Japanese
-        text = locator.xpath("z:choose/z:if/z:text", namespaces=self.tools.ns)[0]
-        text.getparent().insert(0, text)
-        
-        choose = SubElement(text.getparent(), "choose")
-        ife = SubElement(choose, "if")
-        ife.attrib["locator"]="page"
-        ife.attrib["match"]="any"
-        choose.insert(1, ife)
-        
-        # Without labels for some
-        if config.get("c-page-label-form", "") !="":
-            label = SubElement(ife, "label")
-            label.attrib["variable"] = "locator"
-            label.attrib["form"] = config.get("c-page-label-form", "long")
-            ife.insert(0, label)
-        
+        # Address inverted
+        locatortext = locator.xpath("z:choose/z:if/z:text", namespaces=self.tools.ns)[0]
         if config.get("c-invert-page-label", False):
-            text.getparent().insert(1, choose)
+            locatortext.getparent().insert(0, locatortext)  
+        
+        
+        labelgroup = locator.xpath("z:choose/z:if/z:choose", namespaces=self.tools.ns)[0]
+        # Remove label if not needed
+        if config.get("c-page-label-form", "") == "":
+            labelgroup.getparent().remove(labelgroup)
+        # Or add label to page
         else:
-            text.getparent().insert(0, choose)
+            # if volume
+            volumegroup = labelgroup.xpath("z:else-if", namespaces=self.tools.ns)[0]
+            pagelabel = self.tools.appendchild(volumegroup, "label", None, {"variable": "locator"})
+            
+            # if no volume
+            ifpage = self.tools.appendchild(labelgroup, "else", None, {})
+            pagelabel = self.tools.appendchild(ifpage, "label", None, {"variable": "locator"})
+            
+            # Add suffix
+            labels = locator.xpath(".//z:label", namespaces=self.tools.ns)
+            for label in labels:
+                label.attrib["form"] = config.get("c-page-label-form", "long")
+                label.attrib["suffix"] = config.get("c-page-label-suffix", " ")
+                
+        # between date and page
+        group = self.citationlayout.xpath("z:group", namespaces=self.tools.ns)[0]
+        group.attrib["delimiter"] = config.get("c-date-page-delimiter", ", ")
+        
+        # et-al setting
+        citation = self.citationlayout.getparent()
+        if config.get("c-et-al-subsequent", False):
+            citation.attrib.pop("et-al-min")
+            citation.attrib.pop("et-al-use-first")
+            citation.attrib["et-al-subsequent-min"] = "3"
+            citation.attrib["et-al-subsequent-use-first"] = "1"
+        
+        # delimiter-precedes-last
+        if config.get("c-delimiter-precedes-last", False):
+            citation.attrib["delimiter-precedes-last"] = "always"
+        else:
+            citation.attrib["delimiter-precedes-last"] = "never"
         
         """
         Dates
@@ -150,6 +169,10 @@ class Processor:
         # Label
         label = contributors.xpath("z:group/z:names/z:label", namespaces=self.tools.ns)[0]
         label.attrib["prefix"] = ""
+        
+        # Split names with delimiters
+        if config.get("b-name-part-delimiter", "")!="":
+            self.tools.splitname(name, config.get("b-name-part-delimiter", ""))
         
         """
         Container contributors
@@ -221,7 +244,7 @@ class Processor:
         Secondary contributors
         """
         secondarycontributors = self.bibliographylayout.xpath("z:text[@macro='secondary-contributors"+self.langsuffix+"']", namespaces=self.tools.ns)[0]
-        secondarycontributors.attrib["suffix"] = ", "
+        secondarycontributors.attrib["suffix"] = config.get("b-secondary-contributor-label-right", ",")
         
         # Remove prefix
         authors = self.bibliographylayout.xpath("z:text[@macro='secondary-contributors"+self.langsuffix+"']", namespaces=self.tools.ns)[0]
@@ -431,8 +454,16 @@ class Processor:
                 if config.get("b-locator-label-form", "")!="":
                     ilabel  = self.tools.insertchild(0, issue, "label", None, {"variable": "issue", "form": "short", "text-case": "capitalize-first"})
             volumeissuegroup.insert(0, vgroup)
+        else: # No label
+            itext = issue.xpath("z:text", namespaces=self.tools.ns)[0]
+            itext.attrib["prefix"] = config.get("b-issue-left", "")
+            itext.attrib["suffix"] = config.get("b-issue-right", "")
             
-        
+            volif = locators.xpath("z:choose/z:if/z:choose/z:if", namespaces=self.tools.ns)[0]
+            votext = locators.xpath("z:choose/z:if/z:choose/z:if/z:text", namespaces=self.tools.ns)[0]
+            volif.insert(0, votext)
+            
+            
         # text.attrib.pop("prefix")
         group.attrib.pop("prefix") # = config.get("b-issue-left", "")
         group.attrib.pop("suffix") # = config.get("b-issue-right", "")
@@ -453,13 +484,15 @@ class Processor:
         
         if config.get("b-locator-label-invert", False):
             ilabel.getparent().insert(len(ilabel.getparent().getchildren()), ilabel)
-            issue.attrib["prefix"] = config.get("b-issue-left", "")
-            ilabel.attrib["suffix"] = config.get("b-issue-right", "")
+            issue.attrib["prefix"] = config.get("b-only-issue-left", "")
+            ilabel.attrib["suffix"] = config.get("b-only-issue-right", "")
+            ilabel.getparent().attrib["delimiter"] = config.get("b-locator-label-delimiter", "")
         else:
             ilabel.getparent().insert(0, ilabel)
             ilabel.attrib["text-case"] = "capitalize-first"
-            ilabel.attrib["prefix"] = config.get("b-issue-left", "")
-            issue.attrib["suffix"] = config.get("b-issue-right", "")
+            ilabel.attrib["prefix"] = config.get("b-only-issue-left", "")
+            ilabel.getparent().attrib["delimiter"] = config.get("b-locator-label-delimiter", "")
+            issue.attrib["suffix"] = config.get("b-only-issue-right", "")
         
         group.attrib.pop("prefix")
 
