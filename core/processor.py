@@ -64,14 +64,17 @@ class Processor:
         
         # Address inverted
         locatortext = locator.xpath("z:choose/z:if/z:text", namespaces=self.tools.ns)[0]
-        if config.get("c-invert-page-label", False):
-            locatortext.getparent().insert(0, locatortext)  
-        
         
         labelgroup = locator.xpath("z:choose/z:if/z:choose", namespaces=self.tools.ns)[0]
         # Remove label if not needed
         if config.get("c-page-label-form", "") == "":
+            choose = self.tools.appendchild(locatortext.getparent(), "choose", None, {})
+            ifnotpage = self.tools.appendchild(choose, "if", None, {"locator": "page", "match":"none"})
+            pagelabel = self.tools.appendchild(ifnotpage, "label", None, {"variable": "locator", "form":config.get("c-locator-label-form", "")})
+            if config.get("c-locator-label-right", "")!="":
+                pagelabel.attrib["suffix"] = config.get("c-locator-label-right", "")
             labelgroup.getparent().remove(labelgroup)
+
         # Or add label to page
         else:
             # if volume
@@ -87,7 +90,12 @@ class Processor:
             for label in labels:
                 label.attrib["form"] = config.get("c-page-label-form", "long")
                 label.attrib["suffix"] = config.get("c-page-label-suffix", " ")
-                
+        
+        if config.get("c-invert-page-label", False):
+            locatortext.getparent().insert(0, locatortext)  
+        else:
+            locatortext.getparent().append(locatortext)
+        
         # between date and page
         group = self.citationlayout.xpath("z:group", namespaces=self.tools.ns)[0]
         group.attrib["delimiter"] = config.get("c-date-page-delimiter", ", ")
@@ -133,10 +141,11 @@ class Processor:
         self.bibliographylayout.insert(idx, containercontributor)
         
         # Move locator chapter after issue
-        issue = self.bibliographylayout.xpath("z:text[@macro='issue"+self.langsuffix+"']", namespaces=self.tools.ns)[0]
-        locatorschapter = self.bibliographylayout.xpath("z:text[@macro='locators-chapter"+self.langsuffix+"']", namespaces=self.tools.ns)[0]
-        idx = issue.getparent().getchildren().index(locatorschapter)
-        issue.getparent().insert(idx, issue)
+        if self.config.get("b-locators-chapter-after-issue", False):
+            issue = self.bibliographylayout.xpath("z:text[@macro='issue"+self.langsuffix+"']", namespaces=self.tools.ns)[0]
+            locatorschapter = self.bibliographylayout.xpath("z:text[@macro='locators-chapter"+self.langsuffix+"']", namespaces=self.tools.ns)[0]
+            idx = issue.getparent().getchildren().index(locatorschapter)
+            issue.getparent().insert(idx, issue)
                 
         # Remove delimiters
         group = self.bibliographylayout.xpath("z:group", namespaces=self.tools.ns)[0]
@@ -144,9 +153,15 @@ class Processor:
         self.bibliographylayout.attrib.pop("suffix")
         
         # Add period before access
-        period = SubElement(self.bibliographylayout, "text")
-        period.attrib["value"] = config.get("b-final-punctuation", ". ")
-        self.bibliographylayout.insert(-2, period)
+        finaldot = self.macros.get("final-dot", None)
+        if config.get("b-final-punctuation-omit-type", "")!="":
+            choose = self.tools.appendchild(finaldot, "choose", None, {})
+            notomit = self.tools.appendchild(choose, "if", None, {"type": config.get("b-final-punctuation-omit-type", ""), "match": "none"})
+            self.tools.appendchild(notomit, "text", None, {"value": config.get("b-final-punctuation", ". ")})
+        else:
+            self.tools.appendchild(finaldot, "text", None, {"value": config.get("b-final-punctuation", ". ")})
+        
+        self.tools.insertchild(-2, self.bibliographylayout, "text", None, {"macro": "final-dot"+self.langsuffix})
         
         """
         Contributors
@@ -169,6 +184,10 @@ class Processor:
         # Label
         label = contributors.xpath("z:group/z:names/z:label", namespaces=self.tools.ns)[0]
         label.attrib["prefix"] = ""
+        
+        # Add label affixes
+        label.attrib["prefix"] = config.get("b-contributor-label-left", " (")
+        label.attrib["suffix"] = config.get("b-contributor-label-right", ")")
         
         # Split names with delimiters
         if config.get("b-name-part-delimiter", "")!="":
@@ -196,22 +215,35 @@ class Processor:
             name.attrib["delimiter-precedes-last"] = config.get("b-delimiter-precedes-last", "never")
             if config.get("b-container-contributor-name-as-sort-order", "")!="":
                 name.attrib["name-as-sort-order"] = config.get("b-container-contributor-name-as-sort-order", "first")
+            
+            # Split names with delimiters
+            if config.get("b-name-part-delimiter", "")!="":
+                self.tools.splitname(name, config.get("b-name-part-delimiter", ""))
         
         # Remove prefix from container-title to container-contributor suffix
         title = self.bibliographylayout.xpath("z:text[@macro='container-title"+self.langsuffix+"']", namespaces=self.tools.ns)[0]
         title.attrib["prefix"] = ""
         
         authors = self.bibliographylayout.xpath("z:text[@macro='container-contributors"+self.langsuffix+"']", namespaces=self.tools.ns)[0]
-        authors.attrib["suffix"] = config.get("b-book-authors-suffix", ". ")
+        authors.attrib["suffix"] = config.get("b-container-contributors-suffix", "")
         
         # Move container-prefix="in" to contributors from title
         title = self.macros.get('container-title', None)
         authors = self.macros.get('container-contributors', None).xpath("z:choose/z:if/z:group", namespaces=self.tools.ns)[0]
-        prefix = title.xpath("z:choose/z:if/z:text[@macro='container-prefix']", namespaces=self.tools.ns)[0]
+        prefix = title.xpath("z:choose/z:if/z:text[@macro='container-prefix"+self.langsuffix+"']", namespaces=self.tools.ns)[0]
         prefix.attrib["prefix"] = ". "
         prefix.attrib["suffix"] = ""
         authors.attrib["delimiter"] = " "
         authors.insert(0, prefix)
+        
+        # Translator editor instead of editor translator
+        tred = self.macros.get('container-contributors', None).xpath("z:choose/z:if/z:group/z:names[@variable='editor translator']", namespaces=self.tools.ns)[0]
+        if config.get("b-translator-editor", False):
+            tred.attrib["variable"] = "translator editor"
+        
+        # Translator editor delimiter
+        if config.get("b-translator-editor-delimiter", "")!="":
+            tred.attrib["delimiter"] = config.get("b-translator-editor-delimiter", "")
         
         # Format names and labels
         nameslist = self.macros.get('container-contributors', None).xpath("z:choose/z:if/z:group/z:names", namespaces=self.tools.ns)
@@ -272,6 +304,10 @@ class Processor:
             if config.get("b-secondary-contributor-name-as-sort-order", "")!="":
                 name.attrib["name-as-sort-order"] = config.get("b-secondary-contributor-name-as-sort-order", "first")
             name.getparent().insert(0, name)
+           
+            # Split names with delimiters
+            if config.get("b-name-part-delimiter", "")!="":
+                self.tools.splitname(name, config.get("b-name-part-delimiter", ""))
         
         for label in labels:
             label.attrib["prefix"] = config.get("b-contributor-2-label-left", " (")
@@ -385,13 +421,23 @@ class Processor:
         Edition
         """
         edition = self.bibliographylayout.xpath("z:text[@macro='edition"+self.langsuffix+"']", namespaces=self.tools.ns)[0]
-        edition.attrib["suffix"] = config.get("b-edition-right", "")
+        if config.get("b-edition-left", "")!="":
+            edition.attrib["prefix"] = config.get("b-edition-left", "")
+        if config.get("b-edition-right", "")!="":
+            edition.attrib["suffix"] = config.get("b-edition-right", "")
         
-        # Remove prefix
+        # Remove prefix for bill book graphic legal_case legislation motion_picture report song
         editionnumeric = self.macros.get("edition", None).xpath("z:choose/z:if/z:choose/z:if/z:group", namespaces=self.tools.ns)[0]
         editiontext = self.macros.get("edition", None).xpath("z:choose/z:if/z:choose/z:else/z:text", namespaces=self.tools.ns)[0]
         editionnumeric.attrib.pop("prefix")
         editiontext.attrib.pop("prefix")
+        
+        # Remove prefix for chapter entry-dictionary entry-encyclopedia paper-conference
+        editionnumeric = self.macros.get("edition", None).xpath("z:choose/z:else-if/z:choose/z:if/z:group", namespaces=self.tools.ns)[0]
+        editiontext = self.macros.get("edition", None).xpath("z:choose/z:else-if/z:choose/z:else/z:text", namespaces=self.tools.ns)[0]
+        editionnumeric.attrib.pop("prefix")
+        editiontext.attrib.pop("prefix")
+        
         
         
         """
@@ -414,8 +460,9 @@ class Processor:
         volume = locators.xpath("z:choose/z:if/z:choose/z:if", namespaces=self.tools.ns)[0]
         vtext = locators.xpath("z:choose/z:if/z:choose/z:if/z:text", namespaces=self.tools.ns)[0]
         group = locators.xpath("z:choose/z:if/z:choose/z:if/z:group", namespaces=self.tools.ns)[0]
-            
         
+        vtext.attrib["prefix"] = config.get("b-volume-left", "")
+
         #add comma between volume and issue
         volumeissuegroup = SubElement(volume, "group")
         volume.insert(0, volumeissuegroup)
@@ -494,6 +541,10 @@ class Processor:
             ilabel.getparent().attrib["delimiter"] = config.get("b-locator-label-delimiter", "")
             issue.attrib["suffix"] = config.get("b-only-issue-right", "")
         
+        # Remove label if not needed
+        if config.get("b-locator-label-form", "")=="":
+            ilabel.getparent().remove(ilabel)
+        
         group.attrib.pop("prefix")
 
         # Only issued present
@@ -506,6 +557,7 @@ class Processor:
         locatorschapter = self.macros.get("locators-chapter", None)
         group = locatorschapter.xpath("z:choose/z:if/z:choose/z:if/z:group", namespaces=self.tools.ns)[0]
         group.attrib["prefix"] = config.get("b-locator-chapter-prefix", "、")
+        group.attrib["suffix"] = config.get("b-locator-chapter-suffix", "、")
         locatorform = config.get("b-locator-chapter-label-form", "long")
         
         if  config.get("b-locator-chapter-label-invert", False):
@@ -537,7 +589,21 @@ class Processor:
         else:
             if config.get("b-locator-label-form", "")!="":
                 self.tools.insertchild(0, page.getparent(), "label", None, {"form": config.get("b-locator-label-form", "long"), "variable": "page", "suffix":config.get("b-locator-label-delimiter", "")})
-            
+        
+
+        """
+        Publisher place
+        """
+        if config.get("b-publisher-remove-place", False):
+            publisherplace = self.macros.get("publisher", None).xpath("z:group/z:text[@variable='publisher-place']", namespaces=self.tools.ns)[0]
+            publisherplace.getparent().remove(publisherplace)
+        
+        #Publisher group affix
+        publishergroup = self.macros.get("publisher", None).xpath("z:group", namespaces=self.tools.ns)[0]
+        if config.get("b-publisher-group-left", "")!="":
+            publishergroup.attrib["prefix"] = config.get("b-publisher-group-left", "")
+        if config.get("b-publisher-group-right", "")!="":
+            publishergroup.attrib["prefix"] = config.get("b-publisher-group-right", "")
         """
         Access
         """
@@ -552,19 +618,34 @@ class Processor:
         urldoi = access.xpath("z:group/z:choose/z:if[@type='legal_case']", namespaces=self.tools.ns)[0].getparent()
         urldoi.getparent().insert(0, urldoi)
         issuedgroup = access.xpath("z:group/z:choose/z:if[@type='webpage post-weblog']", namespaces=self.tools.ns)[0]
-        
         accessed = access.xpath("z:group/z:choose/z:if[@variable='issued']/z:group", namespaces=self.tools.ns)[0]
-        accessedlabel = access.xpath("z:group/z:choose/z:if[@variable='issued']/z:group/z:text", namespaces=self.tools.ns)[0]
+        
+        # Prefix url and doi
+        if config.get("b-url-left", "")!="":
+            url = access.xpath("z:group/z:choose/z:if[@type='legal_case']/z:choose/z:else/z:text", namespaces=self.tools.ns)[0]
+            url.attrib["prefix"] = config.get("b-url-left", "")
+        
+        if config.get("b-doi-left", "")!="":
+            doi = access.xpath("z:group/z:choose/z:if[@type='legal_case']/z:choose/z:if/z:text", namespaces=self.tools.ns)[0]
+            doi.attrib["prefix"] = config.get("b-doi-left", "")
         
         if not config.get("b-accessed-label-added", False):
+            accessedlabel = access.xpath("z:group/z:choose/z:if[@variable='issued']/z:group/z:text", namespaces=self.tools.ns)[0]
             accessed.remove(accessedlabel)
-        
+       
         issuedgroup.insert(0, accessed)
         
         #remove issued date = force accessed date
         issued = access.xpath("z:group/z:choose/z:if[@type='webpage post-weblog']/z:date", namespaces=self.tools.ns)[0]
         issuedgroup.remove(issued)
         
-        accessed.attrib["prefix"] = config.get("a-bracket-left", "（")
-        accessed.attrib["suffix"] = config.get("a-bracket-right", "）")
+        if config.get("b-accessed-left", "")!="":
+            accessed.attrib["prefix"] = config.get("b-accessed-left", "")
+        if config.get("b-accessed-right", "")!="":
+            accessed.attrib["suffix"] = config.get("b-accessed-right", "")
         accessed.attrib["delimiter"] = config.get("b-accessed-label-right", "")
+        
+        #Format accessed date
+        if config.get("b-accessed-format", "")!="":
+            accesseddate = accessed.xpath("z:date", namespaces=self.tools.ns)[0]
+            self.tools.formatdate(accesseddate, config.get("b-accessed-format", ""))

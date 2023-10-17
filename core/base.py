@@ -37,6 +37,12 @@ class Base:
         self.root.attrib["page-range-format"] = "expanded"
         self.root.attrib["default-locale"] = config.get("locale", "en-UK")
         
+        # new macros
+        # Add period before access
+        macros = self.getmacros()
+        idx = self.root.index(macros.get(list(macros.keys())[len(macros)-1], None))+1
+        macro = self.tools.insertchild(idx, self.root, "macro", None, {"name": "final-dot"})
+        
         # retrieve macro list
         self.macros = self.getmacros()
         self.jamacros = self.getmacrosja()
@@ -106,7 +112,7 @@ class Base:
             self.tools.appendchild(terms, "term", "訳", {"name": "translator", "form": "short"})
             self.tools.appendchild(terms, "term", "編訳", {"name": "editortranslator", "form": "short"})
             self.tools.appendchild(terms, "term", "アクセス", {"name": "accessed"})
-            
+                       
         
         if multilingual:
             #Process Japanese
@@ -131,6 +137,11 @@ class Base:
             jm.attrib["name"] = mkey+"-ja"
             parent.insert(index, jm)
             macros[mkey] = jm
+            macroelements = jm.xpath(".//z:text[@macro]", namespaces=self.ns)
+            for m in macroelements:
+                m.attrib["macro"] = m.attrib["macro"]+"-ja"
+            # print(macroelements)
+            
         return macros
     
     def setmetadata(self):
@@ -177,4 +188,4 @@ class Base:
     def create(self):
         os.makedirs("output", exist_ok=True)
         self.tree.write(self.output, pretty_print=True, xml_declaration=True, encoding="UTF-8")
-        # self.install()
+        self.install()

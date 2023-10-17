@@ -1,4 +1,4 @@
-import os
+import os, re
 from lxml.etree import SubElement, QName
 import pandas as pd
 
@@ -7,6 +7,30 @@ class Tools:
         self.ns = {"z": "http://purl.org/net/xbiblio/csl"}
         df = pd.read_excel(os.path.dirname(os.path.abspath(__file__))+"/../input/config.xlsx")[["variable", id]].fillna("")
         self.config = dict(zip(df["variable"],df[id]))
+    
+    def getformat(self, format):
+        parts = []
+        pattern = r"[^\w\d]+"
+        d = list(set(re.findall(pattern, format)))
+        if len(d)==1:
+            d = d[0]
+        else:
+            d = "/"
+        parts = [x.lower()[0] for x in format.split(d) if len(x.lower())>0]
+        return parts, d
+    
+    def formatdate(self, date, format):
+        names = {
+            "y": "year",
+            "m": "month",
+            "d": "day",
+        }
+        f, d = self.getformat(format)
+        for x in f:
+            if x in names:
+                self.appendchild(date, "date-part", None, {"name": names[x], "form": "numeric"})
+        date.attrib["delimiter"] = d
+        date.attrib.pop("form")
     
     def splitname(self, name, delimiter="", ):
         self.appendchild(name, "name-part", None, {"suffix": delimiter, "name": "family"})

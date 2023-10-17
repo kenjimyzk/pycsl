@@ -37,7 +37,7 @@
     <category citation-format="author-date"/>
     <category field="generic-base"/>
     <summary>The author-date variant of the Chicago style - Edited for Africa Educational Research Journal (English)</summary>
-    <updated>2023-10-16T20:10:10+09:00</updated>
+    <updated>2023-10-17T16:08:56+09:00</updated>
     <rights license="http://creativecommons.org/licenses/by-sa/3.0/">This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License</rights>
   </info>
   <locale xml:lang="en">
@@ -112,11 +112,11 @@
       <if type="chapter entry-dictionary entry-encyclopedia paper-conference" match="any">
         <group prefix="" delimiter=" ">
           <text macro="container-prefix" suffix="" prefix=". "/>
-          <names variable="container-author" delimiter=", ">
+          <names variable="container-author" delimiter=", " suffix=", ">
             <name and="symbol" delimiter=", " sort-separator=", " delimiter-precedes-last="never" initialize-with=". " initialize="true"/>
             <label form="short" suffix=")" prefix=" ("/>
           </names>
-          <names variable="editor translator" delimiter=", ">
+          <names variable="editor translator" delimiter=", " suffix=", ">
             <name and="symbol" delimiter=", " sort-separator=", " delimiter-precedes-last="never" initialize-with=". " initialize="true"/>
             <label form="short" suffix=")" prefix=" ("/>
           </names>
@@ -210,7 +210,7 @@
   <macro name="substitute-title-ja">
     <choose>
       <if type="article-magazine article-newspaper review review-book" match="any">
-        <text macro="container-title"/>
+        <text macro="container-title-ja"/>
       </if>
     </choose>
   </macro>
@@ -218,7 +218,7 @@
     <group delimiter=". ">
       <names variable="author">
         <name and="symbol" name-as-sort-order="all" sort-separator=", " delimiter=", " delimiter-precedes-last="never" initialize-with=". " initialize="true"/>
-        <label form="short" prefix=""/>
+        <label form="short" prefix=" (" suffix=")"/>
         <substitute>
           <names variable="editor"/>
           <names variable="translator"/>
@@ -239,11 +239,11 @@
           <names variable="editor"/>
           <names variable="translator"/>
           <names variable="director"/>
-          <text macro="substitute-title"/>
-          <text macro="title"/>
+          <text macro="substitute-title-ja"/>
+          <text macro="title-ja"/>
         </substitute>
       </names>
-      <text macro="recipient"/>
+      <text macro="recipient-ja"/>
     </group>
   </macro>
   <macro name="contributors-short">
@@ -265,8 +265,8 @@
         <names variable="editor"/>
         <names variable="translator"/>
         <names variable="director"/>
-        <text macro="substitute-title"/>
-        <text macro="title"/>
+        <text macro="substitute-title-ja"/>
+        <text macro="title-ja"/>
       </substitute>
     </names>
   </macro>
@@ -335,10 +335,10 @@
     <group delimiter=". ">
       <choose>
         <if type="graphic report" match="any">
-          <text macro="archive"/>
+          <text macro="archive-ja"/>
         </if>
         <else-if type="article-journal bill book chapter legal_case legislation motion_picture paper-conference" match="none">
-          <text macro="archive"/>
+          <text macro="archive-ja"/>
         </else-if>
       </choose>
       <choose>
@@ -484,13 +484,13 @@
       <else-if type="chapter entry-dictionary entry-encyclopedia paper-conference" match="any">
         <choose>
           <if is-numeric="edition">
-            <group delimiter=" " prefix=", ">
+            <group delimiter=" ">
               <number variable="edition" form="ordinal"/>
               <text term="edition" form="short"/>
             </group>
           </if>
           <else>
-            <text variable="edition" prefix=", "/>
+            <text variable="edition"/>
           </else>
         </choose>
       </else-if>
@@ -531,7 +531,7 @@
       <if type="article-journal">
         <choose>
           <if variable="volume">
-            <text variable="volume" prefix=" "/>
+            <text variable="volume" prefix=""/>
             <group delimiter="">
               <group delimiter="">
                 <choose>
@@ -549,7 +549,6 @@
           </if>
           <else-if variable="issue">
             <group delimiter="">
-              <text term="issue" form="short" text-case="capitalize-first" prefix="("/>
               <text variable="issue" suffix=")"/>
               <date variable="issued" prefix="(" suffix=")">
                 <date-part name="month"/>
@@ -661,7 +660,7 @@
       <if type="chapter entry-dictionary entry-encyclopedia paper-conference" match="any">
         <choose>
           <if variable="page">
-            <group prefix=", ">
+            <group prefix=", " suffix="">
               <label form="short" variable="page" suffix=""/>
               <text variable="volume" suffix=":"/>
               <text variable="page"/>
@@ -846,7 +845,7 @@
   <macro name="container-title-ja">
     <choose>
       <if type="chapter entry-dictionary entry-encyclopedia paper-conference" match="any">
-        <text macro="container-prefix" suffix=" "/>
+        <text macro="container-prefix-ja" suffix=" "/>
       </if>
     </choose>
     <choose>
@@ -1088,7 +1087,7 @@
     <choose>
       <if variable="interviewer" type="interview" match="any">
         <group delimiter=". ">
-          <text macro="interviewer"/>
+          <text macro="interviewer-ja"/>
           <text variable="medium" text-case="capitalize-first"/>
         </group>
       </if>
@@ -1176,10 +1175,10 @@
         <group prefix=". " delimiter=", ">
           <group delimiter=" ">
             <text variable="genre" text-case="capitalize-first"/>
-            <text macro="event"/>
+            <text macro="event-ja"/>
           </group>
           <text variable="event-place"/>
-          <text macro="day-month"/>
+          <text macro="day-month-ja"/>
         </group>
       </else-if>
       <else-if type="article-newspaper article-magazine personal_communication" match="any">
@@ -1212,11 +1211,15 @@
               <text variable="genre" text-case="capitalize-first"/>
             </if>
           </choose>
-          <text macro="publisher"/>
+          <text macro="publisher-ja"/>
         </group>
       </else>
     </choose>
   </macro>
+  <macro name="final-dot">
+    <text value=". "/>
+  </macro>
+  <macro name="final-dot-ja"/>
   <citation et-al-min="3" et-al-use-first="1" disambiguate-add-year-suffix="false" disambiguate-add-names="false" disambiguate-add-givenname="false" givenname-disambiguation-rule="primary-name" collapse="year" after-collapse-delimiter="; " delimiter-precedes-last="never">
     <layout prefix="(" suffix=")" delimiter="; ">
       <group delimiter=", ">
@@ -1253,7 +1256,7 @@
       </group>
       <text macro="description"/>
       <text macro="secondary-contributors" suffix=""/>
-      <text macro="container-contributors" suffix=", "/>
+      <text macro="container-contributors" suffix=""/>
       <text macro="container-title" prefix=""/>
       <text macro="edition" suffix=". "/>
       <text macro="issue"/>
@@ -1262,7 +1265,7 @@
       <text macro="locators" suffix=", "/>
       <text macro="collection-title" prefix=". "/>
       <text macro="locators-article"/>
-      <text value=". "/>
+      <text macro="final-dot"/>
       <text macro="access"/>
     </layout>
   </bibliography>
