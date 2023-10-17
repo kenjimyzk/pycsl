@@ -34,6 +34,10 @@ Due to language limitations, names in Katakana are displayed like Japanese names
 
 
 # List of styles
+* [International Collaboration and Development Studies @ Osaka University (Japanese)](https://github.com/frianasoa/pycsl/releases/latest/download/chicago-author-date-iczemi-ja.csl)
+* [International Collaboration and Development Studies @ Osaka University (English)](https://github.com/frianasoa/pycsl/releases/latest/download/chicago-author-date-iczemi-en.csl)
+* [Journal of Kyosei Studies @ Osaka University (Japanese)](https://github.com/frianasoa/pycsl/releases/latest/download/chicago-author-date-ikyosei-ja.csl)
+* [Journal of Kyosei Studies @ Osaka University (English)](https://github.com/frianasoa/pycsl/releases/latest/download/chicago-author-date-ikyosei-en.csl)
 * [Africa Educational Research Journal (Japanese)](https://github.com/frianasoa/pycsl/releases/latest/download/chicago-author-date-aerj-ja.csl)
 * [Africa Educational Research Journal (English)](https://github.com/frianasoa/pycsl/releases/latest/download/chicago-author-date-aerj-en.csl)
 * [Journal of International Development Studies (Japanese)](https://github.com/frianasoa/pycsl/releases/latest/download/chicago-author-date-jids-ja.csl)
