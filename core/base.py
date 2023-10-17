@@ -11,7 +11,9 @@ class Base:
             self.id = ids[1]
         else:
             self.id = ids[0]
-            
+        
+        config["translate"] = {x.strip().split(":")[0]:x.strip().split(":")[1] for x in config.get("translate", "").split(",") if len(x.strip().split(":"))>1}
+        
         self.input = "input/chicago-author-date.csl"
         self.output = "output/chicago-author-date-"+self.id+".csl"
         
@@ -188,4 +190,4 @@ class Base:
     def create(self):
         os.makedirs("output", exist_ok=True)
         self.tree.write(self.output, pretty_print=True, xml_declaration=True, encoding="UTF-8")
-        self.install()
+        # self.install()

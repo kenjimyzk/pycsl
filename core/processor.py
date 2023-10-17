@@ -128,6 +128,13 @@ class Processor:
         originaldate.attrib.pop("date-parts")
         self.tools.appendchild(originaldate, "date-part", None, {"name": "year"})
         
+        # No date
+        if config.get("a-no-date-value", "")!="":
+            nodate = dateintext.xpath("z:choose/z:else/z:text", namespaces=self.tools.ns)[0]
+            nodate.attrib.pop("term")
+            nodate.attrib.pop("form")
+            nodate.attrib["value"] = config.get("a-no-date-value", "")
+        
         
     def setbibliography(self):
         """
@@ -345,6 +352,11 @@ class Processor:
         nodate = date.xpath("z:choose/z:else/z:text", namespaces=self.tools.ns)[0]
         nodate.attrib["prefix"] =  config.get("b-date-left", "（")
         nodate.attrib["suffix"] =  config.get("b-date-right", "）")
+        
+        if config.get("a-no-date-value", "")!="":
+            nodate.attrib.pop("term")
+            nodate.attrib.pop("form")
+            nodate.attrib["value"] = config.get("a-no-date-value", "")
         
         """
         Title
@@ -639,13 +651,27 @@ class Processor:
         issued = access.xpath("z:group/z:choose/z:if[@type='webpage post-weblog']/z:date", namespaces=self.tools.ns)[0]
         issuedgroup.remove(issued)
         
-        if config.get("b-accessed-left", "")!="":
-            accessed.attrib["prefix"] = config.get("b-accessed-left", "")
-        if config.get("b-accessed-right", "")!="":
-            accessed.attrib["suffix"] = config.get("b-accessed-right", "")
+        if self.mainconfig.get("language", "Japanese")=="English":
+            if config.get("b-accessed-left-en", "")!="":
+                value = config.get("b-accessed-left-en", "")
+                accessed.attrib["prefix"] = value
+            if config.get("b-accessed-right-en", "")!="":
+                value = config.get("b-accessed-right-en", "")
+                accessed.attrib["suffix"] = value
+        else:
+            if config.get("b-accessed-left", "")!="":
+                value = config.get("b-accessed-left", "")
+                accessed.attrib["prefix"] = value
+            if config.get("b-accessed-right", "")!="":
+                value = config.get("b-accessed-right", "")
+                accessed.attrib["suffix"] = value
+        
         accessed.attrib["delimiter"] = config.get("b-accessed-label-right", "")
         
         #Format accessed date
         if config.get("b-accessed-format", "")!="":
             accesseddate = accessed.xpath("z:date", namespaces=self.tools.ns)[0]
-            self.tools.formatdate(accesseddate, config.get("b-accessed-format", ""))
+            if self.mainconfig.get("language", "Japanese")=="English":
+                self.tools.formatdate(accesseddate, config.get("b-accessed-format-en", ""))
+            else:
+                self.tools.formatdate(accesseddate, config.get("b-accessed-format", ""))

@@ -18,6 +18,11 @@ class Tools:
             d = "/"
         parts = [x.lower()[0] for x in format.split(d) if len(x.lower())>0]
         return parts, d
+        
+    def translate(self, value, data):
+        for d in data:
+            value = value.replace(d, data[d])
+        return value
     
     def formatdate(self, date, format):
         names = {
@@ -25,12 +30,20 @@ class Tools:
             "m": "month",
             "d": "day",
         }
-        f, d = self.getformat(format)
-        for x in f:
-            if x in names:
-                self.appendchild(date, "date-part", None, {"name": names[x], "form": "numeric"})
-        date.attrib["delimiter"] = d
-        date.attrib.pop("form")
+        if format=="japanese":
+            self.appendchild(date, "date-part", None, {"name": "year", "form": "numeric", "suffix": "年"})
+            self.appendchild(date, "date-part", None, {"name": "month", "form": "numeric", "suffix": "月"})
+            self.appendchild(date, "date-part", None, {"name": "day", "form": "numeric", "suffix": "日"})
+            date.attrib.pop("form")
+        elif format=="english":
+            pass
+        else:
+            f, d = self.getformat(format)
+            for x in f:
+                if x in names:
+                    self.appendchild(date, "date-part", None, {"name": names[x], "form": "numeric"})
+            date.attrib["delimiter"] = d
+            date.attrib.pop("form")
     
     def splitname(self, name, delimiter="", ):
         self.appendchild(name, "name-part", None, {"suffix": delimiter, "name": "family"})
