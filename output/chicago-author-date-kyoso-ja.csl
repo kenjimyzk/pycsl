@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <style xmlns="http://purl.org/net/xbiblio/csl" class="in-text" version="1.0" demote-non-dropping-particle="display-and-sort" page-range-format="expanded" default-locale="en-US">
   <info>
-    <title>International Collaboration and Development Studies (Japanese)</title>
-    <id>http://www.zotero.org/styles/chicago-author-date-iczemi-ja</id>
+    <title>Journal - Mirai Kyoso (Japanese)</title>
+    <id>http://www.zotero.org/styles/chicago-author-date-kyoso-ja</id>
     <link href="http://www.zotero.org/styles/chicago-author-date" rel="self"/>
     <link href="http://www.chicagomanualofstyle.org/tools_citationguide.html" rel="documentation"/>
     <author>
@@ -36,7 +36,7 @@
     </contributor>
     <category citation-format="author-date"/>
     <category field="generic-base"/>
-    <summary>The author-date variant of the Chicago style - Edited for International Collaboration and Development Studies (Japanese)</summary>
+    <summary>The author-date variant of the Chicago style - Edited for Journal - Mirai Kyoso (Japanese)</summary>
     <updated>2023-10-18T12:39:56+09:00</updated>
     <rights license="http://creativecommons.org/licenses/by-sa/3.0/">This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License</rights>
   </info>
@@ -92,11 +92,11 @@
       <if type="chapter entry-dictionary entry-encyclopedia paper-conference" match="none">
         <group delimiter=". ">
           <names variable="editor translator" delimiter=". ">
-            <name and="symbol" delimiter=", " sort-separator=", " delimiter-precedes-last="never"/>
+            <name and="symbol" delimiter=", " sort-separator=", " delimiter-precedes-last="never" name-as-sort-order="all"/>
             <label form="short" text-case="capitalize-first" suffix=")" prefix=" ("/>
           </names>
           <names variable="director" delimiter=". ">
-            <name and="symbol" delimiter=", " sort-separator=", " delimiter-precedes-last="never"/>
+            <name and="symbol" delimiter=", " sort-separator=", " delimiter-precedes-last="never" name-as-sort-order="all"/>
             <label form="short" text-case="capitalize-first" suffix=")" prefix=" ("/>
           </names>
         </group>
@@ -108,11 +108,17 @@
       <if type="chapter entry-dictionary entry-encyclopedia paper-conference" match="none">
         <group delimiter=". ">
           <names variable="editor translator" delimiter=". ">
-            <name and="symbol" delimiter="・" sort-separator="、" delimiter-precedes-last="never" name-as-sort-order="all"/>
+            <name and="" delimiter="・" sort-separator="、" delimiter-precedes-last="never">
+              <name-part suffix=" " name="family"/>
+              <name-part name="given"/>
+            </name>
             <label form="short" text-case="capitalize-first" suffix="、" prefix=""/>
           </names>
           <names variable="director" delimiter=". ">
-            <name and="symbol" delimiter="・" sort-separator="、" delimiter-precedes-last="never" name-as-sort-order="all"/>
+            <name and="" delimiter="・" sort-separator="、" delimiter-precedes-last="never">
+              <name-part suffix=" " name="family"/>
+              <name-part name="given"/>
+            </name>
             <label form="short" text-case="capitalize-first" suffix="、" prefix=""/>
           </names>
         </group>
@@ -125,11 +131,11 @@
         <group prefix="" delimiter=" ">
           <text macro="container-prefix" suffix="" prefix=". "/>
           <names variable="container-author" delimiter=", " suffix=". ">
-            <name and="symbol" delimiter=", " sort-separator=", " delimiter-precedes-last="never"/>
+            <name and="symbol" delimiter=", " sort-separator=", " delimiter-precedes-last="never" initialize-with="." initialize="true"/>
             <label form="short" suffix=")" prefix=" ("/>
           </names>
           <names variable="editor translator" delimiter=", " suffix=". ">
-            <name and="symbol" delimiter=", " sort-separator=", " delimiter-precedes-last="never"/>
+            <name and="symbol" delimiter=", " sort-separator=", " delimiter-precedes-last="never" initialize-with="." initialize="true"/>
             <label form="short" suffix=")" prefix=" ("/>
           </names>
         </group>
@@ -142,11 +148,17 @@
         <group prefix="" delimiter=" ">
           <text macro="container-prefix-ja" suffix="" prefix=". "/>
           <names variable="container-author" delimiter=", ">
-            <name and="symbol" delimiter="・" sort-separator="、" delimiter-precedes-last="never" name-as-sort-order="all"/>
+            <name and="" delimiter="・" sort-separator="、" delimiter-precedes-last="never" initialize-with="." initialize="true">
+              <name-part suffix=" " name="family"/>
+              <name-part name="given"/>
+            </name>
             <label form="short" suffix="" prefix=""/>
           </names>
-          <names variable="editor translator" delimiter="、">
-            <name and="symbol" delimiter="・" sort-separator="、" delimiter-precedes-last="never" name-as-sort-order="all"/>
+          <names variable="translator editor" delimiter="、">
+            <name and="" delimiter="・" sort-separator="、" delimiter-precedes-last="never" initialize-with="." initialize="true">
+              <name-part suffix=" " name="family"/>
+              <name-part name="given"/>
+            </name>
             <label form="short" suffix="" prefix=""/>
           </names>
         </group>
@@ -230,7 +242,7 @@
   <macro name="contributors">
     <group delimiter=". ">
       <names variable="author">
-        <name and="symbol" name-as-sort-order="first" sort-separator=", " delimiter=", " delimiter-precedes-last="never"/>
+        <name and="symbol" name-as-sort-order="all" sort-separator=", " delimiter=", " delimiter-precedes-last="never" initialize-with="." initialize="false"/>
         <label form="short" prefix=" (" suffix=")"/>
         <substitute>
           <names variable="editor"/>
@@ -246,7 +258,10 @@
   <macro name="contributors-ja">
     <group delimiter=". ">
       <names variable="author">
-        <name and="symbol" name-as-sort-order="all" sort-separator="、" delimiter="・" delimiter-precedes-last="never"/>
+        <name and="" name-as-sort-order="first" sort-separator="、" delimiter="・" delimiter-precedes-last="never" initialize-with="." initialize="false">
+          <name-part suffix=" " name="family"/>
+          <name-part name="given"/>
+        </name>
         <label form="short" prefix="" suffix=""/>
         <substitute>
           <names variable="editor"/>
@@ -273,7 +288,7 @@
   </macro>
   <macro name="contributors-short-ja">
     <names variable="author">
-      <name form="short" and="symbol" delimiter="・" initialize-with=". "/>
+      <name form="short" and="" delimiter="・" initialize-with=". "/>
       <substitute>
         <names variable="editor"/>
         <names variable="translator"/>
@@ -318,7 +333,7 @@
               <text variable="DOI" prefix="https://doi.org/"/>
             </if>
             <else>
-              <text variable="URL" prefix=" "/>
+              <text variable="URL" prefix=", "/>
             </else>
           </choose>
         </if>
@@ -333,11 +348,11 @@
       </choose>
       <choose>
         <if type="webpage post-weblog" match="any">
-          <group delimiter=": " prefix=" (" suffix="閲覧）">
-            <date variable="accessed">
-              <date-part name="year" form="numeric" suffix="年"/>
-              <date-part name="month" form="numeric" suffix="月"/>
-              <date-part name="day" form="numeric" suffix="日"/>
+          <group delimiter=": " prefix=" (" suffix=" アクセス）">
+            <date variable="accessed" delimiter="/">
+              <date-part name="year" form="numeric"/>
+              <date-part name="month" form="numeric"/>
+              <date-part name="day" form="numeric"/>
             </date>
           </group>
         </if>
@@ -371,8 +386,12 @@
       </choose>
       <choose>
         <if type="webpage post-weblog" match="any">
-          <group delimiter="" prefix="（" suffix="閲覧）">
-            <date variable="accessed" form="text"/>
+          <group delimiter="" prefix="（" suffix=" アクセス）">
+            <date variable="accessed" delimiter="/">
+              <date-part name="year" form="numeric"/>
+              <date-part name="month" form="numeric"/>
+              <date-part name="day" form="numeric"/>
+            </date>
           </group>
         </if>
       </choose>
@@ -391,7 +410,7 @@
         </choose>
       </if>
       <else-if type="bill book graphic legislation motion_picture song" match="any">
-        <text variable="title" text-case="title" font-style="italic" prefix="" suffix=""/>
+        <text variable="title" text-case="title" prefix="" suffix=""/>
         <group prefix=" (" suffix=")" delimiter=" ">
           <text term="version"/>
           <text variable="version"/>
@@ -426,7 +445,7 @@
         <text variable="title"/>
       </else-if>
       <else>
-        <text variable="title" text-case="title" quotes="true"/>
+        <text variable="title" text-case="title" quotes="false"/>
       </else>
     </choose>
   </macro>
@@ -675,7 +694,7 @@
         <choose>
           <if variable="page">
             <group prefix=", " suffix="">
-              <label form="short" variable="page" suffix=" "/>
+              <label form="short" variable="page" suffix=""/>
               <text variable="volume" suffix=":"/>
               <text variable="page"/>
             </group>
@@ -689,7 +708,7 @@
       <if type="chapter entry-dictionary entry-encyclopedia paper-conference" match="any">
         <choose>
           <if variable="page">
-            <group prefix="、" suffix="">
+            <group prefix="" suffix="、">
               <label form="short" variable="page" suffix=""/>
               <text variable="volume" suffix=":"/>
               <text variable="page"/>
@@ -793,13 +812,13 @@
         <group delimiter=" ">
           <choose>
             <if type="chapter">
-              <text variable="container-title" text-case="title" font-style="italic" prefix="" suffix=""/>
+              <text variable="container-title" text-case="title" prefix="" suffix=""/>
             </if>
             <else-if type="article-journal">
-              <text variable="container-title" text-case="title" font-style="italic" prefix=". " suffix=", "/>
+              <text variable="container-title" text-case="title" prefix=", " suffix=" "/>
             </else-if>
             <else>
-              <text variable="container-title" text-case="title" font-style="italic"/>
+              <text variable="container-title" text-case="title"/>
             </else>
           </choose>
           <choose>
@@ -849,13 +868,14 @@
   </macro>
   <macro name="publisher-ja">
     <group delimiter=": ">
+      <text variable="publisher-place"/>
       <text variable="publisher"/>
     </group>
   </macro>
   <macro name="date">
     <choose>
       <if variable="issued">
-        <group delimiter="" prefix=" (" suffix=") ">
+        <group delimiter="" prefix="" suffix="　">
           <date variable="original-date" prefix="" suffix="=">
             <date-part name="year"/>
           </date>
@@ -868,14 +888,14 @@
         <text variable="status" text-case="capitalize-first"/>
       </else-if>
       <else>
-        <text prefix=" (" suffix=") " value="n.d."/>
+        <text term="no date" form="short" prefix="" suffix="　"/>
       </else>
     </choose>
   </macro>
   <macro name="date-ja">
     <choose>
       <if variable="issued">
-        <group delimiter="" prefix="（" suffix="）">
+        <group delimiter="" prefix=" " suffix="　">
           <date variable="original-date" prefix="" suffix="=">
             <date-part name="year"/>
           </date>
@@ -888,7 +908,7 @@
         <text variable="status" text-case="capitalize-first"/>
       </else-if>
       <else>
-        <text prefix="（" suffix="）" value="n.d."/>
+        <text term="no date" form="short" prefix=" " suffix="　"/>
       </else>
     </choose>
   </macro>
@@ -908,7 +928,7 @@
         <text variable="status"/>
       </else-if>
       <else>
-        <text value="n.d."/>
+        <text term="no date" form="short"/>
       </else>
     </choose>
   </macro>
@@ -928,7 +948,7 @@
         <text variable="status"/>
       </else-if>
       <else>
-        <text value="n.d."/>
+        <text term="no date" form="short"/>
       </else>
     </choose>
   </macro>
@@ -1206,7 +1226,7 @@
   <macro name="final-dot-ja">
     <choose>
       <if type="webpage" match="none">
-        <text value=". "/>
+        <text value="。"/>
       </if>
     </choose>
   </macro>
@@ -1252,7 +1272,7 @@
       </group>
     </layout>
   </citation>
-  <bibliography hanging-indent="true" et-al-min="11" et-al-use-first="7" entry-spacing="0">
+  <bibliography hanging-indent="true" et-al-min="11" et-al-use-first="7" entry-spacing="0" subsequent-author-substitute=" ">
     <sort>
       <key variable="name-kana"/>
       <key macro="contributors"/>
@@ -1260,44 +1280,44 @@
       <key variable="title"/>
     </sort>
     <layout locale="ja">
-      <group>
-        <text macro="contributors-ja"/>
+      <text macro="contributors-ja"/>
+      <group display="block">
         <text macro="date-ja"/>
         <text macro="title-ja"/>
+        <text macro="description-ja"/>
+        <text macro="secondary-contributors-ja" suffix=""/>
+        <text macro="container-contributors-ja" suffix=""/>
+        <text macro="container-title-ja" prefix=""/>
+        <text macro="edition-ja" prefix="（" suffix="）"/>
+        <text macro="locators-chapter-ja"/>
+        <text macro="collection-title-journal-ja"/>
+        <text macro="locators-ja" suffix=""/>
+        <text macro="collection-title-ja"/>
+        <text macro="issue-ja"/>
+        <text macro="locators-article-ja"/>
+        <text macro="final-dot-ja"/>
+        <text macro="access-ja"/>
       </group>
-      <text macro="description-ja"/>
-      <text macro="secondary-contributors-ja" suffix=""/>
-      <text macro="container-contributors-ja" suffix=""/>
-      <text macro="container-title-ja" prefix=""/>
-      <text macro="edition-ja" prefix="（" suffix="）"/>
-      <text macro="issue-ja"/>
-      <text macro="locators-chapter-ja"/>
-      <text macro="collection-title-journal-ja"/>
-      <text macro="locators-ja" suffix=""/>
-      <text macro="collection-title-ja"/>
-      <text macro="locators-article-ja"/>
-      <text macro="final-dot-ja"/>
-      <text macro="access-ja"/>
     </layout>
     <layout>
-      <group>
-        <text macro="contributors"/>
+      <text macro="contributors"/>
+      <group display="block">
         <text macro="date"/>
         <text macro="title"/>
+        <text macro="description"/>
+        <text macro="secondary-contributors" suffix=""/>
+        <text macro="container-contributors" suffix=""/>
+        <text macro="container-title" prefix=""/>
+        <text macro="edition" prefix=". " suffix=". "/>
+        <text macro="locators-chapter"/>
+        <text macro="collection-title-journal" prefix=", " suffix=", "/>
+        <text macro="locators" suffix=""/>
+        <text macro="collection-title" prefix=". "/>
+        <text macro="issue"/>
+        <text macro="locators-article"/>
+        <text macro="final-dot"/>
+        <text macro="access"/>
       </group>
-      <text macro="description"/>
-      <text macro="secondary-contributors" suffix=""/>
-      <text macro="container-contributors" suffix=""/>
-      <text macro="container-title" prefix=""/>
-      <text macro="edition" prefix=". " suffix=". "/>
-      <text macro="issue"/>
-      <text macro="locators-chapter"/>
-      <text macro="collection-title-journal" prefix=", " suffix=", "/>
-      <text macro="locators" suffix=""/>
-      <text macro="collection-title" prefix=". "/>
-      <text macro="locators-article"/>
-      <text macro="final-dot"/>
-      <text macro="access"/>
     </layout>
   </bibliography>
 </style>

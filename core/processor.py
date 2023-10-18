@@ -268,9 +268,9 @@ class Processor:
             name.attrib["delimiter"] = config.get("b-name-delimiter", "・")
             name.attrib["sort-separator"] = config.get("b-name-sort-separator", ",")
             name.attrib["delimiter-precedes-last"] = config.get("b-delimiter-precedes-last", "never")
-            if config.get("b-name-initialize-with", "")!="":
-                name.attrib["initialize-with"] = config.get("b-name-initialize-with", "")
-                name.attrib["initialize"] = config.get("b-name-initialize", "")
+            if config.get("b-container-contributor-initialize-with", "")!="":
+                name.attrib["initialize-with"] = config.get("b-container-contributor-initialize-with", "")
+                name.attrib["initialize"] = config.get("b-container-contributor-initialize", "")
             
             if config.get("b-container-contributor-name-as-sort-order", "")!="":
                 name.attrib["name-as-sort-order"] = config.get("b-container-contributor-name-as-sort-order", "first")
@@ -304,9 +304,9 @@ class Processor:
             name.attrib["delimiter"] = config.get("b-name-delimiter", "・")
             name.attrib["sort-separator"] = config.get("b-name-sort-separator", ",")
             name.attrib["delimiter-precedes-last"] = config.get("b-delimiter-precedes-last", "never")
-            if config.get("b-name-initialize-with", "")!="":
-                name.attrib["initialize-with"] = config.get("b-name-initialize-with", "")
-                name.attrib["initialize"] = config.get("b-name-initialize", "")
+            if config.get("b-secondary-contributor-initialize-with", "")!="":
+                name.attrib["initialize-with"] = config.get("b-secondary-contributor-initialize-with", "")
+                name.attrib["initialize"] = config.get("b-secondary-contributor-initialize", "")
                 
             if config.get("b-secondary-contributor-name-as-sort-order", "")!="":
                 name.attrib["name-as-sort-order"] = config.get("b-secondary-contributor-name-as-sort-order", "first")
@@ -675,3 +675,17 @@ class Processor:
                 self.tools.formatdate(accesseddate, config.get("b-accessed-format-en", ""))
             else:
                 self.tools.formatdate(accesseddate, config.get("b-accessed-format", ""))
+        
+        # Move the second part to a block
+        if config.get("b-contributors-display-block", False):
+            group = self.bibliographylayout.xpath("z:group", namespaces=self.tools.ns)[0]
+            contributors = group.xpath("z:text", namespaces=self.tools.ns)[0]
+            texts = self.bibliographylayout.xpath("z:text", namespaces=self.tools.ns)
+            self.bibliographylayout.insert(0, contributors)
+            group.attrib["display"] = "block"
+            for text in texts:
+                group.append(text)
+            
+        # substitute subsequent authors
+        if config.get("b-contributors-substitute-subsequent", "")!="":    
+            self.bibliographylayout.getparent().attrib["subsequent-author-substitute"] = config.get("b-contributors-substitute-subsequent", "")

@@ -30,14 +30,17 @@ If you write in Japanese or Japanese with English (or other languages) reference
 If you do not follow these steps, Japanese will not render properly.
 
 ## Limitations
-Due to language limitations, names in Katakana are displayed like Japanese names (セイメイ), without punctuation.
-
+Due to limitations of the processor, the following should be edited by hand for now. 
+* Names in Katakana are displayed like Japanese names (セイメイ), without punctuation.
+* It is not yet possible to put a space between family name and given name (姓 名)
 
 # List of styles
 * [International Collaboration and Development Studies @ Osaka University (Japanese)](https://github.com/frianasoa/pycsl/releases/latest/download/chicago-author-date-iczemi-ja.csl)
 * [International Collaboration and Development Studies @ Osaka University (English)](https://github.com/frianasoa/pycsl/releases/latest/download/chicago-author-date-iczemi-en.csl)
 * [Journal of Kyosei Studies @ Osaka University (Japanese)](https://github.com/frianasoa/pycsl/releases/latest/download/chicago-author-date-kyosei-ja.csl)
 * [Journal of Kyosei Studies @ Osaka University (English)](https://github.com/frianasoa/pycsl/releases/latest/download/chicago-author-date-kyosei-en.csl)
+* [Journal - Mirai Kyoso @ Osaka University (Japanese)](https://github.com/frianasoa/pycsl/releases/latest/download/chicago-author-date-kyoso-ja.csl)
+* [Journal - Mirai Kyoso @ Osaka University (English)](https://github.com/frianasoa/pycsl/releases/latest/download/chicago-author-date-kyoso-.csl)
 * [Africa Educational Research Journal (Japanese)](https://github.com/frianasoa/pycsl/releases/latest/download/chicago-author-date-aerj-ja.csl)
 * [Africa Educational Research Journal (English)](https://github.com/frianasoa/pycsl/releases/latest/download/chicago-author-date-aerj-en.csl)
 * [Journal of International Development Studies (Japanese)](https://github.com/frianasoa/pycsl/releases/latest/download/chicago-author-date-jids-ja.csl)
