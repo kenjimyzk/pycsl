@@ -647,6 +647,8 @@ class Processor:
        
         issuedgroup.insert(0, accessed)
         
+       
+        
         #remove issued date = force accessed date
         issued = access.xpath("z:group/z:choose/z:if[@type='webpage post-weblog']/z:date", namespaces=self.tools.ns)[0]
         issuedgroup.remove(issued)
@@ -675,6 +677,13 @@ class Processor:
                 self.tools.formatdate(accesseddate, config.get("b-accessed-format-en", ""))
             else:
                 self.tools.formatdate(accesseddate, config.get("b-accessed-format", ""))
+        
+        
+        # access block (new line)
+        if config.get("b-access-display-newline", False):
+            access = self.bibliographylayout.xpath("z:text[@macro='access"+self.langsuffix+"']", namespaces=self.tools.ns)[0]
+            group = self.tools.appendchild(access.getparent(), "group", None, {"display":"indent"})
+            group.insert(0, access)
         
         # Move the second part to a block
         if config.get("b-contributors-display-block", False):

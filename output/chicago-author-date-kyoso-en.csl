@@ -37,7 +37,7 @@
     <category citation-format="author-date"/>
     <category field="generic-base"/>
     <summary>The author-date variant of the Chicago style - Edited for Journal - Mirai Kyoso (English)</summary>
-    <updated>2023-10-18T12:39:57+09:00</updated>
+    <updated>2023-10-18T15:30:28+09:00</updated>
     <rights license="http://creativecommons.org/licenses/by-sa/3.0/">This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License</rights>
   </info>
   <locale xml:lang="en">
@@ -80,11 +80,11 @@
       <if type="chapter entry-dictionary entry-encyclopedia paper-conference" match="none">
         <group delimiter=". ">
           <names variable="editor translator" delimiter=". ">
-            <name and="symbol" delimiter=", " sort-separator=", " delimiter-precedes-last="never" name-as-sort-order="all"/>
+            <name and="text" delimiter=", " sort-separator=", " delimiter-precedes-last="never" name-as-sort-order="all"/>
             <label form="short" text-case="capitalize-first" suffix=")" prefix=" ("/>
           </names>
           <names variable="director" delimiter=". ">
-            <name and="symbol" delimiter=", " sort-separator=", " delimiter-precedes-last="never" name-as-sort-order="all"/>
+            <name and="text" delimiter=", " sort-separator=", " delimiter-precedes-last="never" name-as-sort-order="all"/>
             <label form="short" text-case="capitalize-first" suffix=")" prefix=" ("/>
           </names>
         </group>
@@ -113,11 +113,11 @@
         <group prefix="" delimiter=" ">
           <text macro="container-prefix" suffix="" prefix=". "/>
           <names variable="container-author" delimiter=", " suffix=". ">
-            <name and="symbol" delimiter=", " sort-separator=", " delimiter-precedes-last="never" initialize-with="." initialize="true"/>
+            <name and="text" delimiter=", " sort-separator=", " delimiter-precedes-last="never" initialize-with="." initialize="true"/>
             <label form="short" suffix=")" prefix=" ("/>
           </names>
           <names variable="editor translator" delimiter=", " suffix=". ">
-            <name and="symbol" delimiter=", " sort-separator=", " delimiter-precedes-last="never" initialize-with="." initialize="true"/>
+            <name and="text" delimiter=", " sort-separator=", " delimiter-precedes-last="never" initialize-with="." initialize="true"/>
             <label form="short" suffix=")" prefix=" ("/>
           </names>
         </group>
@@ -217,7 +217,7 @@
   <macro name="contributors">
     <group delimiter=". ">
       <names variable="author">
-        <name and="symbol" name-as-sort-order="all" sort-separator=", " delimiter=", " delimiter-precedes-last="never" initialize-with="." initialize="false"/>
+        <name and="text" name-as-sort-order="all" sort-separator=", " delimiter=", " delimiter-precedes-last="never" initialize-with="." initialize="false"/>
         <label form="short" prefix=" (" suffix=")"/>
         <substitute>
           <names variable="editor"/>
@@ -305,7 +305,7 @@
               <text variable="DOI" prefix="https://doi.org/"/>
             </if>
             <else>
-              <text variable="URL" prefix=", "/>
+              <text variable="URL" prefix=" "/>
             </else>
           </choose>
         </if>
@@ -801,7 +801,7 @@
               <text variable="container-title" text-case="title" prefix="" suffix=""/>
             </if>
             <else-if type="article-journal">
-              <text variable="container-title" text-case="title" prefix=", " suffix=" "/>
+              <text variable="container-title" text-case="title" prefix=" " suffix=" "/>
             </else-if>
             <else>
               <text variable="container-title" text-case="title"/>
@@ -1243,6 +1243,8 @@
         <text macro="issue"/>
         <text macro="locators-article"/>
         <text macro="final-dot"/>
+      </group>
+      <group display="indent">
         <text macro="access"/>
       </group>
     </layout>
