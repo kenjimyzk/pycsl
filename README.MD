@@ -10,7 +10,7 @@ For Zotero
 1. Open Zotero
 2. Double click on the file you just downloaded & confirm
 3. An error will show. 
-    - It is fine to click OK (This error shows because we use one file to generate both Japanese and English, which is not expected by the softwar)
+    - It is fine to click OK (This error shows because we use one file to generate both Japanese and English, which is not expected by the software)
 
 For more information on installation on Zotero head to [the official website](https://www.zotero.org/support/styles). 
 
